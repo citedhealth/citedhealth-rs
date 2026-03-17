@@ -10,10 +10,15 @@ Cited Health aggregates clinical research on supplements and health ingredients.
 
 > **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/api/evidence/), [Papers](https://citedhealth.com/papers/)
 
+<p align="center">
+  <img src="demo.gif" alt="citedhealth CLI demo — search ingredients, evidence grades, and PubMed papers" width="800">
+</p>
+
 ## Table of Contents
 
 - [Install](#install)
 - [Quick Start](#quick-start)
+- [Command-Line Interface](#command-line-interface)
 - [What You Can Do](#what-you-can-do)
   - [Search Ingredients](#search-ingredients)
   - [Lookup Evidence Grades](#lookup-evidence-grades)
@@ -31,8 +36,14 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-citedhealth = "0.2"
+citedhealth = "0.3"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+```
+
+Or install the CLI directly:
+
+```bash
+cargo install citedhealth
 ```
 
 ## Quick Start
@@ -70,6 +81,43 @@ async fn main() -> Result<(), citedhealth::CitedHealthError> {
     Ok(())
 }
 ```
+
+## Command-Line Interface
+
+Install the CLI with `cargo install citedhealth`, then query supplement research data directly from the terminal.
+
+```bash
+# Search ingredients by name
+citedhealth ingredients biotin
+
+# Filter ingredients by category
+citedhealth ingredients --category vitamins
+
+# Get a single ingredient by slug
+citedhealth ingredient biotin
+
+# Look up evidence for an ingredient-condition pair
+citedhealth evidence biotin hair-loss
+
+# Search PubMed papers by keyword and year
+citedhealth papers melatonin --year 2024
+
+# Get a single paper by PMID
+citedhealth paper 35959711
+
+# Compact JSON output (default is pretty-printed)
+citedhealth ingredients biotin --json
+```
+
+| Command | Description |
+|---------|-------------|
+| `ingredients [query]` | List or search ingredients. `-c, --category` to filter. |
+| `ingredient <slug>` | Get a single ingredient by slug. |
+| `evidence <ingredient> <condition>` | Look up evidence for an ingredient-condition pair. |
+| `papers [query]` | List or search PubMed papers. `-y, --year` to filter. |
+| `paper <pmid>` | Get a single paper by PubMed ID. |
+
+All commands accept `--json` for compact (single-line) JSON output.
 
 ## What You Can Do
 
