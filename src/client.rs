@@ -3,7 +3,7 @@ use std::time::Duration;
 use crate::error::CitedHealthError;
 use crate::types::*;
 
-const DEFAULT_BASE_URL: &str = "https://citedhealth.com";
+const DEFAULT_BASE_URL: &str = "https://haircited.com";
 const DEFAULT_TIMEOUT_SECS: u64 = 30;
 
 /// Builder for configuring a [`CitedHealth`] client.
