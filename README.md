@@ -8,7 +8,7 @@ Async Rust client for the [Cited Health](https://citedhealth.com) REST API -- ev
 
 Cited Health aggregates clinical research on supplements and health ingredients. The API provides access to 74 ingredients, 30 conditions, 152 evidence links with grades (A-F), and 2,881 PubMed-indexed papers. Every evidence link is backed by study counts, participant totals, and effect direction.
 
-> **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/evidence/), [Papers](https://citedhealth.com/papers/)
+> **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/api/evidence/), [Papers](https://citedhealth.com/papers/)
 
 ## Table of Contents
 
@@ -97,7 +97,7 @@ println!("Forms: {:?}", biotin.forms);           // ["capsule", "tablet", "liqui
 println!("Mechanism: {}", biotin.mechanism);      // Coenzyme for carboxylase enzymes...
 ```
 
-Learn more: [Browse Ingredients](https://citedhealth.com/) | [Evidence Database](https://citedhealth.com/evidence/) | [API Docs](https://citedhealth.com/developers/)
+Learn more: [Browse Ingredients](https://citedhealth.com/) | [Evidence Database](https://citedhealth.com/api/evidence/) | [API Docs](https://citedhealth.com/developers/)
 
 ### Lookup Evidence Grades
 
@@ -124,7 +124,7 @@ if let Some(link) = evidence.results.first() {
 let link = client.get_evidence(42).await?;
 ```
 
-Learn more: [Evidence Database](https://citedhealth.com/evidence/) | [Grading Methodology](https://citedhealth.com/editorial-policy/) | [Hair Health](https://haircited.com) | [Sleep Health](https://sleepcited.com)
+Learn more: [Evidence Database](https://citedhealth.com/api/evidence/) | [Grading Methodology](https://citedhealth.com/editorial-policy/) | [Hair Health](https://haircited.com) | [Sleep Health](https://sleepcited.com)
 
 ### Search PubMed Papers
 
@@ -199,7 +199,7 @@ let client = CitedHealth::builder()
 
 ## Learn More About Evidence-Based Supplements
 
-- **Tools**: [Evidence Checker](https://citedhealth.com/evidence/) · [Ingredient Browser](https://citedhealth.com/) · [Paper Search](https://citedhealth.com/papers/)
+- **Tools**: [Evidence Checker](https://citedhealth.com/api/evidence/) · [Ingredient Browser](https://citedhealth.com/) · [Paper Search](https://citedhealth.com/papers/)
 - **Browse**: [Hair Health](https://haircited.com) · [Sleep Health](https://sleepcited.com) · [All Ingredients](https://citedhealth.com/api/ingredients/)
 - **Guides**: [Grading Methodology](https://citedhealth.com/editorial-policy/) · [Medical Disclaimer](https://citedhealth.com/medical-disclaimer/)
 - **API**: [REST API Docs](https://citedhealth.com/developers/) · [OpenAPI Spec](https://citedhealth.com/api/openapi.json)
