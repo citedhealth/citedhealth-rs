@@ -2,6 +2,7 @@
 name = "citedhealth"
 version = "0.2.0"
 edition = "2021"
+rust-version = "1.83"
 authors = ["Cited Health Inc."]
 description = "Async Rust client for the Cited Health API -- evidence-based supplement research data, PubMed papers, and evidence grades."
 license = "MIT"
