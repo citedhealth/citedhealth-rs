@@ -60,7 +60,7 @@ async fn main() -> Result<(), citedhealth::CitedHealthError> {
     println!("Found {} ingredients", ingredients.count);
 
     // Get evidence for biotin and hair loss
-    let evidence = client.list_evidence(Some("biotin"), Some("hair-loss")).await?;
+    let evidence = client.list_evidence(Some("biotin"), Some("nutritional-deficiency-hair-loss")).await?;
     for link in &evidence.results {
         println!(
             "{} for {}: grade {} ({} studies, {} participants)",
@@ -97,7 +97,7 @@ citedhealth ingredients --category vitamins
 citedhealth ingredient biotin
 
 # Look up evidence for an ingredient-condition pair
-citedhealth evidence biotin hair-loss
+citedhealth evidence biotin nutritional-deficiency-hair-loss
 
 # Search PubMed papers by keyword and year
 citedhealth papers melatonin --year 2024
@@ -161,7 +161,7 @@ Evidence links represent the research relationship between an ingredient and a h
 
 ```rust
 // Find evidence for biotin and hair loss
-let evidence = client.list_evidence(Some("biotin"), Some("hair-loss")).await?;
+let evidence = client.list_evidence(Some("biotin"), Some("nutritional-deficiency-hair-loss")).await?;
 if let Some(link) = evidence.results.first() {
     println!("Grade: {} ({})", link.grade, link.grade_label);
     println!("Direction: {}", link.direction);
