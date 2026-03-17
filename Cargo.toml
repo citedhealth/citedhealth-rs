@@ -1,0 +1,25 @@
+[package]
+name = "citedhealth"
+version = "0.2.0"
+edition = "2021"
+authors = ["Cited Health Inc."]
+description = "Async Rust client for the Cited Health API -- evidence-based supplement research data, PubMed papers, and evidence grades."
+license = "MIT"
+repository = "https://github.com/citedhealth/citedhealth-rs"
+homepage = "https://citedhealth.com"
+documentation = "https://docs.rs/citedhealth"
+readme = "README.md"
+keywords = ["supplements", "evidence", "health", "pubmed", "api-client"]
+categories = ["api-bindings", "web-programming::http-client"]
+
+exclude = ["target/", "demo.gif", "demo.tape"]
+
+[dependencies]
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+mockito = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
