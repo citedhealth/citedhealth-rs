@@ -21,7 +21,7 @@ Cited Health aggregates clinical research on supplements and health ingredients.
 - [API Reference](#api-reference)
 - [Error Handling](#error-handling)
 - [Custom Configuration](#custom-configuration)
-- [Learn More About Supplement Research](#learn-more-about-supplement-research)
+- [Learn More About Evidence-Based Supplements](#learn-more-about-evidence-based-supplements)
 - [Also Available](#also-available)
 - [License](#license)
 
@@ -97,7 +97,7 @@ println!("Forms: {:?}", biotin.forms);           // ["capsule", "tablet", "liqui
 println!("Mechanism: {}", biotin.mechanism);      // Coenzyme for carboxylase enzymes...
 ```
 
-Learn more: [Browse Ingredients](https://citedhealth.com/ingredients/) | [API Docs](https://citedhealth.com/developers/)
+Learn more: [Browse Ingredients](https://citedhealth.com/) | [Evidence Database](https://citedhealth.com/evidence/) | [API Docs](https://citedhealth.com/developers/)
 
 ### Lookup Evidence Grades
 
@@ -124,7 +124,7 @@ if let Some(link) = evidence.results.first() {
 let link = client.get_evidence(42).await?;
 ```
 
-Learn more: [Evidence Database](https://citedhealth.com/evidence/) | [Grading Methodology](https://citedhealth.com/methodology/)
+Learn more: [Evidence Database](https://citedhealth.com/evidence/) | [Grading Methodology](https://citedhealth.com/editorial-policy/) | [Hair Health](https://haircited.com) | [Sleep Health](https://sleepcited.com)
 
 ### Search PubMed Papers
 
@@ -143,7 +143,7 @@ println!("{} - {} ({})", paper.title, paper.journal, paper.study_type);
 println!("Open access: {}", paper.is_open_access);
 ```
 
-Learn more: [Paper Database](https://citedhealth.com/papers/) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/)
+Learn more: [Paper Database](https://citedhealth.com/papers/) | [OpenAPI Spec](https://citedhealth.com/api/openapi.json) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/)
 
 ## API Reference
 
@@ -197,19 +197,26 @@ let client = CitedHealth::builder()
     .build()?;
 ```
 
-## Learn More About Supplement Research
+## Learn More About Evidence-Based Supplements
 
-- **Browse**: [Ingredients](https://citedhealth.com/ingredients/) | [Conditions](https://citedhealth.com/conditions/) | [Evidence](https://citedhealth.com/evidence/)
-- **Research**: [Papers](https://citedhealth.com/papers/) | [Methodology](https://citedhealth.com/methodology/)
-- **API**: [Developer Docs](https://citedhealth.com/developers/) | [OpenAPI Spec](https://citedhealth.com/api/openapi.json)
+- **Tools**: [Evidence Checker](https://citedhealth.com/evidence/) · [Ingredient Browser](https://citedhealth.com/) · [Paper Search](https://citedhealth.com/papers/)
+- **Browse**: [Hair Health](https://haircited.com) · [Sleep Health](https://sleepcited.com) · [All Ingredients](https://citedhealth.com/api/ingredients/)
+- **Guides**: [Grading Methodology](https://citedhealth.com/editorial-policy/) · [Medical Disclaimer](https://citedhealth.com/medical-disclaimer/)
+- **API**: [REST API Docs](https://citedhealth.com/developers/) · [OpenAPI Spec](https://citedhealth.com/api/openapi.json)
+- **Python**: [citedhealth on PyPI](https://pypi.org/project/citedhealth/)
+- **TypeScript**: [citedhealth on npm](https://www.npmjs.com/package/citedhealth)
+- **Go**: [citedhealth-go on pkg.go.dev](https://pkg.go.dev/github.com/citedhealth/citedhealth-go)
+- **Ruby**: [citedhealth on RubyGems](https://rubygems.org/gems/citedhealth)
 
 ## Also Available
 
-| Platform | Package | Link |
+| Platform | Install | Link |
 |----------|---------|------|
 | **PyPI** | `pip install citedhealth` | [PyPI](https://pypi.org/project/citedhealth/) |
 | **npm** | `npm install citedhealth` | [npm](https://www.npmjs.com/package/citedhealth) |
-| **MCP** | `uvx --from "citedhealth[mcp]" python -m citedhealth.mcp_server` | [Config](https://citedhealth.com/developers/) |
+| **Go** | `go get github.com/citedhealth/citedhealth-go` | [pkg.go.dev](https://pkg.go.dev/github.com/citedhealth/citedhealth-go) |
+| **Ruby** | `gem install citedhealth` | [RubyGems](https://rubygems.org/gems/citedhealth) |
+| **MCP** | `uvx citedhealth-mcp` | [PyPI](https://pypi.org/project/citedhealth-mcp/) |
 
 ## License
 
