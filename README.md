@@ -1,8 +1,9 @@
 # citedhealth
 
-[![Crates.io](https://img.shields.io/crates/v/citedhealth)](https://crates.io/crates/citedhealth)
+[![Crates.io version](https://agentgif.com/badge/crates/citedhealth/version.svg)](https://crates.io/crates/citedhealth)
 [![docs.rs](https://docs.rs/citedhealth/badge.svg)](https://docs.rs/citedhealth)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://agentgif.com/badge/github/citedhealth/citedhealth-rs/stars.svg)](https://github.com/citedhealth/citedhealth-rs)
 
 Async Rust client for the [Cited Health](https://citedhealth.com) REST API -- evidence-based supplement research data, PubMed papers, and evidence grades.
 
@@ -11,7 +12,7 @@ Cited Health aggregates clinical research on supplements and health ingredients.
 > **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/api/evidence/), [Papers](https://citedhealth.com/papers/)
 
 <p align="center">
-  <img src="demo.gif" alt="citedhealth CLI demo — search ingredients, evidence grades, and PubMed papers" width="800">
+  <a href="https://agentgif.com/s6D4nzk9"><img src="https://media.agentgif.com/s6D4nzk9.gif" alt="citedhealth Rust CLI demo — search ingredients, evidence grades, and PubMed papers" width="800"></a>
 </p>
 
 ## Table of Contents
