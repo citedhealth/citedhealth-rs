@@ -7,9 +7,9 @@
 
 Async Rust client for the [Cited Health](https://citedhealth.com) REST API -- evidence-based supplement research data, PubMed papers, and evidence grades.
 
-Cited Health aggregates clinical research on supplements and health ingredients. The API provides access to 74 ingredients, 30 conditions, 152 evidence links with grades (A-F), and 2,881 PubMed-indexed papers. Every evidence link is backed by study counts, participant totals, and effect direction.
+Cited Health aggregates clinical research on supplements and health ingredients across 6 sites (citedhealth.com, haircited.com, sleepcited.com, gutcited.com, immunecited.com, braincited.com). The API provides access to 188 ingredients, 84 conditions, 323 evidence links with grades (A-F), 6,197 PubMed-indexed papers, 228 glossary terms, and 50 guides. Every evidence link is backed by study counts, participant totals, and effect direction.
 
-> **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/api/evidence/), [Papers](https://citedhealth.com/papers/)
+> **Explore the data at [citedhealth.com](https://citedhealth.com)** -- [Ingredients](https://citedhealth.com/ingredients/), [Evidence](https://citedhealth.com/api/evidence/), [Papers](https://citedhealth.com/papers/), [Conditions](https://citedhealth.com/conditions/), [Glossary](https://citedhealth.com/glossary/), [Guides](https://citedhealth.com/guides/)
 
 <p align="center">
   <a href="https://agentgif.com/s6D4nzk9"><img src="https://media.agentgif.com/s6D4nzk9.gif" alt="citedhealth Rust CLI demo — search ingredients, evidence grades, and PubMed papers" width="800"></a>
@@ -24,6 +24,9 @@ Cited Health aggregates clinical research on supplements and health ingredients.
   - [Search Ingredients](#search-ingredients)
   - [Lookup Evidence Grades](#lookup-evidence-grades)
   - [Search PubMed Papers](#search-pubmed-papers)
+  - [Browse Conditions](#browse-conditions)
+  - [Glossary Terms](#glossary-terms)
+  - [Educational Guides](#educational-guides)
 - [API Reference](#api-reference)
 - [Error Handling](#error-handling)
 - [Custom Configuration](#custom-configuration)
@@ -37,7 +40,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-citedhealth = "0.3"
+citedhealth = "0.4"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
@@ -106,6 +109,24 @@ citedhealth papers melatonin --year 2024
 # Get a single paper by PMID
 citedhealth paper 35959711
 
+# Search health conditions
+citedhealth conditions "hair loss"
+
+# Get a single condition by slug
+citedhealth condition hair-loss
+
+# Search glossary terms
+citedhealth glossary "bioavailability"
+
+# Get a single glossary term by slug
+citedhealth glossary-term rct
+
+# Search educational guides
+citedhealth guides "biotin"
+
+# Get a single guide by slug
+citedhealth guide biotin-for-hair
+
 # Compact JSON output (default is pretty-printed)
 citedhealth ingredients biotin --json
 ```
@@ -117,6 +138,12 @@ citedhealth ingredients biotin --json
 | `evidence <ingredient> <condition>` | Look up evidence for an ingredient-condition pair. |
 | `papers [query]` | List or search PubMed papers. `-y, --year` to filter. |
 | `paper <pmid>` | Get a single paper by PubMed ID. |
+| `conditions [query]` | List or search health conditions. |
+| `condition <slug>` | Get a single condition by slug. |
+| `glossary [query]` | List or search glossary terms. |
+| `glossary-term <slug>` | Get a single glossary term by slug. |
+| `guides [query]` | List or search educational guides. |
+| `guide <slug>` | Get a single guide by slug. |
 
 All commands accept `--json` for compact (single-line) JSON output.
 
@@ -177,7 +204,7 @@ Learn more: [Evidence Database](https://citedhealth.com/api/evidence/) | [Gradin
 
 ### Search PubMed Papers
 
-Access 2,881 PubMed-indexed papers with metadata including journal, study type, citation count, and open access status.
+Access 6,197 PubMed-indexed papers with metadata including journal, study type, citation count, and open access status.
 
 ```rust
 // Search by title keywords
@@ -194,6 +221,63 @@ println!("Open access: {}", paper.is_open_access);
 
 Learn more: [Paper Database](https://citedhealth.com/papers/) | [OpenAPI Spec](https://citedhealth.com/api/openapi.json) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/)
 
+### Browse Conditions
+
+Explore 84 health conditions across 6 specialized sites -- hair health, sleep, gut, immune, and brain. Each condition includes prevalence data, symptoms, risk factors, and linked evidence.
+
+```rust
+// List all conditions
+let conditions = client.list_conditions(None).await?;
+println!("Total conditions: {}", conditions.count);
+
+// Search conditions by name
+let results = client.list_conditions(Some("hair loss")).await?;
+
+// Get a single condition with full details
+let condition = client.get_condition("hair-loss").await?;
+println!("{}: {}", condition.name, condition.description);
+println!("Symptoms: {:?}", condition.symptoms);
+```
+
+Learn more: [Conditions Database](https://citedhealth.com/conditions/) | [Hair Health](https://haircited.com) | [Sleep Health](https://sleepcited.com) | [Gut Health](https://gutcited.com)
+
+### Glossary Terms
+
+Access 228 glossary terms covering research methodology, nutrients, biological processes, and health conditions. Each term includes a short definition, full definition, and optional abbreviation.
+
+```rust
+// List all glossary terms
+let terms = client.list_glossary(None).await?;
+
+// Search by keyword
+let results = client.list_glossary(Some("bioavailability")).await?;
+
+// Get a specific term
+let term = client.get_glossary_term("rct").await?;
+println!("{} ({}): {}", term.term, term.abbreviation, term.short_definition);
+```
+
+Learn more: [Glossary](https://citedhealth.com/glossary/) | [Editorial Policy](https://citedhealth.com/editorial-policy/) | [API Docs](https://citedhealth.com/developers/)
+
+### Educational Guides
+
+Browse 50 in-depth guides on supplement research, ingredient deep-dives, and health condition explainers.
+
+```rust
+// List all guides
+let guides = client.list_guides(None).await?;
+println!("Total guides: {}", guides.count);
+
+// Search guides by title
+let results = client.list_guides(Some("biotin")).await?;
+
+// Get a single guide with full content
+let guide = client.get_guide("biotin-for-hair").await?;
+println!("{}: {}", guide.title, guide.meta_description);
+```
+
+Learn more: [All Guides](https://citedhealth.com/guides/) | [Immune Health](https://immunecited.com) | [Brain Health](https://braincited.com)
+
 ## API Reference
 
 | Method | Description |
@@ -204,6 +288,12 @@ Learn more: [Paper Database](https://citedhealth.com/papers/) | [OpenAPI Spec](h
 | `get_evidence(id)` | Get a single evidence link by ID |
 | `list_papers(q, year)` | List papers with optional search and year filter |
 | `get_paper(pmid)` | Get a single paper by PubMed ID |
+| `list_conditions(q)` | List conditions with optional search |
+| `get_condition(slug)` | Get a single condition by slug |
+| `list_glossary(q)` | List glossary terms with optional search |
+| `get_glossary_term(slug)` | Get a single glossary term by slug |
+| `list_guides(q)` | List guides with optional search |
+| `get_guide(slug)` | Get a single guide by slug |
 
 All methods are async and return `Result<T, CitedHealthError>`.
 
@@ -249,7 +339,7 @@ let client = CitedHealth::builder()
 ## Learn More About Evidence-Based Supplements
 
 - **Tools**: [Evidence Checker](https://citedhealth.com/api/evidence/) · [Ingredient Browser](https://citedhealth.com/) · [Paper Search](https://citedhealth.com/papers/)
-- **Browse**: [Hair Health](https://haircited.com) · [Sleep Health](https://sleepcited.com) · [All Ingredients](https://citedhealth.com/api/ingredients/)
+- **Browse**: [Hair Health](https://haircited.com) · [Sleep Health](https://sleepcited.com) · [Gut Health](https://gutcited.com) · [Immune Health](https://immunecited.com) · [Brain Health](https://braincited.com)
 - **Guides**: [Grading Methodology](https://citedhealth.com/editorial-policy/) · [Medical Disclaimer](https://citedhealth.com/medical-disclaimer/)
 - **API**: [REST API Docs](https://citedhealth.com/developers/) · [OpenAPI Spec](https://citedhealth.com/api/openapi.json)
 - **Python**: [citedhealth on PyPI](https://pypi.org/project/citedhealth/)

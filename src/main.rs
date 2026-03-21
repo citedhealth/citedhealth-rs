@@ -60,6 +60,42 @@ enum Commands {
         /// PubMed identifier (PMID).
         pmid: String,
     },
+
+    /// List or search health conditions.
+    Conditions {
+        /// Search by name (case-insensitive).
+        query: Option<String>,
+    },
+
+    /// Get a single condition by slug.
+    Condition {
+        /// Condition slug (e.g. "hair-loss", "insomnia").
+        slug: String,
+    },
+
+    /// List or search glossary terms.
+    Glossary {
+        /// Search by term (case-insensitive).
+        query: Option<String>,
+    },
+
+    /// Get a single glossary term by slug.
+    GlossaryTerm {
+        /// Term slug (e.g. "rct", "bioavailability").
+        slug: String,
+    },
+
+    /// List or search educational guides.
+    Guides {
+        /// Search by title (case-insensitive).
+        query: Option<String>,
+    },
+
+    /// Get a single guide by slug.
+    Guide {
+        /// Guide slug (e.g. "biotin-for-hair").
+        slug: String,
+    },
 }
 
 fn print_json<T: serde::Serialize>(value: &T, compact: bool) {
@@ -122,6 +158,30 @@ async fn run(client: &CitedHealth, cli: &Cli) -> Result<(), citedhealth::CitedHe
         Commands::Paper { pmid } => {
             let paper = client.get_paper(pmid).await?;
             print_json(&paper, cli.json);
+        }
+        Commands::Conditions { query } => {
+            let resp = client.list_conditions(query.as_deref()).await?;
+            print_json(&resp, cli.json);
+        }
+        Commands::Condition { slug } => {
+            let condition = client.get_condition(slug).await?;
+            print_json(&condition, cli.json);
+        }
+        Commands::Glossary { query } => {
+            let resp = client.list_glossary(query.as_deref()).await?;
+            print_json(&resp, cli.json);
+        }
+        Commands::GlossaryTerm { slug } => {
+            let term = client.get_glossary_term(slug).await?;
+            print_json(&term, cli.json);
+        }
+        Commands::Guides { query } => {
+            let resp = client.list_guides(query.as_deref()).await?;
+            print_json(&resp, cli.json);
+        }
+        Commands::Guide { slug } => {
+            let guide = client.get_guide(slug).await?;
+            print_json(&guide, cli.json);
         }
     }
     Ok(())

@@ -227,6 +227,75 @@ impl CitedHealth {
     pub async fn get_paper(&self, pmid: &str) -> Result<Paper, CitedHealthError> {
         self.get(&format!("/api/papers/{}/", pmid)).await
     }
+
+    // -- Condition endpoints --------------------------------------------------
+
+    /// List health conditions with optional search.
+    ///
+    /// # Arguments
+    ///
+    /// * `q` - Search by name (case-insensitive).
+    pub async fn list_conditions(
+        &self,
+        q: Option<&str>,
+    ) -> Result<PaginatedResponse<Condition>, CitedHealthError> {
+        let query = match q {
+            Some(q) => format!("?q={}", urlencoding(q)),
+            None => String::new(),
+        };
+        self.get(&format!("/api/conditions/{}", query)).await
+    }
+
+    /// Get a single condition by slug.
+    pub async fn get_condition(&self, slug: &str) -> Result<Condition, CitedHealthError> {
+        self.get(&format!("/api/conditions/{}/", slug)).await
+    }
+
+    // -- Glossary endpoints ---------------------------------------------------
+
+    /// List glossary terms with optional search.
+    ///
+    /// # Arguments
+    ///
+    /// * `q` - Search by term (case-insensitive).
+    pub async fn list_glossary(
+        &self,
+        q: Option<&str>,
+    ) -> Result<PaginatedResponse<GlossaryTerm>, CitedHealthError> {
+        let query = match q {
+            Some(q) => format!("?q={}", urlencoding(q)),
+            None => String::new(),
+        };
+        self.get(&format!("/api/glossary/{}", query)).await
+    }
+
+    /// Get a single glossary term by slug.
+    pub async fn get_glossary_term(&self, slug: &str) -> Result<GlossaryTerm, CitedHealthError> {
+        self.get(&format!("/api/glossary/{}/", slug)).await
+    }
+
+    // -- Guide endpoints ------------------------------------------------------
+
+    /// List guides with optional search.
+    ///
+    /// # Arguments
+    ///
+    /// * `q` - Search by title (case-insensitive).
+    pub async fn list_guides(
+        &self,
+        q: Option<&str>,
+    ) -> Result<PaginatedResponse<Guide>, CitedHealthError> {
+        let query = match q {
+            Some(q) => format!("?q={}", urlencoding(q)),
+            None => String::new(),
+        };
+        self.get(&format!("/api/guides/{}", query)).await
+    }
+
+    /// Get a single guide by slug.
+    pub async fn get_guide(&self, slug: &str) -> Result<Guide, CitedHealthError> {
+        self.get(&format!("/api/guides/{}/", slug)).await
+    }
 }
 
 impl Default for CitedHealth {

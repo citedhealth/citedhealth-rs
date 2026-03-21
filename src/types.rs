@@ -47,6 +47,63 @@ pub struct Condition {
     pub slug: String,
     /// Display name.
     pub name: String,
+    /// Detailed description of the condition.
+    #[serde(default)]
+    pub description: String,
+    /// SEO meta description.
+    #[serde(default)]
+    pub meta_description: String,
+    /// Prevalence information (e.g. "affects 50 million Americans").
+    #[serde(default)]
+    pub prevalence: String,
+    /// Common symptoms associated with the condition.
+    #[serde(default)]
+    pub symptoms: Vec<String>,
+    /// Known risk factors.
+    #[serde(default)]
+    pub risk_factors: Vec<String>,
+    /// Whether this condition is featured on the homepage.
+    #[serde(default)]
+    pub is_featured: bool,
+}
+
+/// A glossary term with definition and categorization.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GlossaryTerm {
+    /// URL-friendly slug.
+    pub slug: String,
+    /// The term itself.
+    pub term: String,
+    /// Brief one-line definition.
+    #[serde(default)]
+    pub short_definition: String,
+    /// Full detailed definition.
+    #[serde(default)]
+    pub definition: String,
+    /// Common abbreviation (e.g. "RCT", "BMI").
+    #[serde(default)]
+    pub abbreviation: String,
+    /// Category (e.g. "research-methods", "nutrients", "conditions").
+    #[serde(default)]
+    pub category: String,
+}
+
+/// An educational guide or article.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Guide {
+    /// URL-friendly slug.
+    pub slug: String,
+    /// Guide title.
+    pub title: String,
+    /// Full guide content in Markdown.
+    #[serde(default)]
+    pub content: String,
+    /// Category (e.g. "supplement-guides", "research-explainers").
+    #[serde(default)]
+    pub category: String,
+    /// SEO meta description.
+    #[serde(default)]
+    pub meta_description: String,
 }
 
 /// A PubMed-indexed research paper.

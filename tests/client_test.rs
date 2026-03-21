@@ -419,3 +419,252 @@ fn test_default_client() {
     // Just verify it can be constructed without panicking.
     drop(client);
 }
+
+// -- Condition endpoints ------------------------------------------------------
+
+fn mock_condition_json() -> String {
+    r#"{
+        "slug": "hair-loss",
+        "name": "Hair Loss",
+        "description": "A condition involving partial or complete loss of hair.",
+        "meta_description": "Evidence-based research on hair loss treatments and supplements.",
+        "prevalence": "Affects approximately 50 million men and 30 million women in the US.",
+        "symptoms": ["thinning hair", "receding hairline", "bald patches"],
+        "risk_factors": ["genetics", "hormonal changes", "stress"],
+        "is_featured": true
+    }"#
+    .to_string()
+}
+
+fn mock_paginated_conditions_json() -> String {
+    format!(
+        r#"{{
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [{}]
+        }}"#,
+        mock_condition_json()
+    )
+}
+
+#[tokio::test]
+async fn test_list_conditions() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/conditions/?q=hair")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_paginated_conditions_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let result = client.list_conditions(Some("hair")).await.unwrap();
+
+    assert_eq!(result.count, 1);
+    assert_eq!(result.results[0].slug, "hair-loss");
+    assert_eq!(result.results[0].name, "Hair Loss");
+    assert!(result.results[0].is_featured);
+    assert_eq!(result.results[0].symptoms.len(), 3);
+    mock.assert_async().await;
+}
+
+#[tokio::test]
+async fn test_list_conditions_no_params() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/conditions/")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_paginated_conditions_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let result = client.list_conditions(None).await.unwrap();
+
+    assert_eq!(result.count, 1);
+    mock.assert_async().await;
+}
+
+#[tokio::test]
+async fn test_get_condition() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/conditions/hair-loss/")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_condition_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let condition = client.get_condition("hair-loss").await.unwrap();
+
+    assert_eq!(condition.slug, "hair-loss");
+    assert_eq!(condition.name, "Hair Loss");
+    assert!(!condition.description.is_empty());
+    assert_eq!(condition.risk_factors, vec!["genetics", "hormonal changes", "stress"]);
+    mock.assert_async().await;
+}
+
+// -- Glossary endpoints -------------------------------------------------------
+
+fn mock_glossary_term_json() -> String {
+    r#"{
+        "slug": "rct",
+        "term": "Randomized Controlled Trial",
+        "short_definition": "A study where participants are randomly assigned to treatment or control groups.",
+        "definition": "A randomized controlled trial (RCT) is the gold standard of clinical research.",
+        "abbreviation": "RCT",
+        "category": "research-methods"
+    }"#
+    .to_string()
+}
+
+fn mock_paginated_glossary_json() -> String {
+    format!(
+        r#"{{
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [{}]
+        }}"#,
+        mock_glossary_term_json()
+    )
+}
+
+#[tokio::test]
+async fn test_list_glossary() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/glossary/?q=randomized")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_paginated_glossary_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let result = client.list_glossary(Some("randomized")).await.unwrap();
+
+    assert_eq!(result.count, 1);
+    assert_eq!(result.results[0].slug, "rct");
+    assert_eq!(result.results[0].abbreviation, "RCT");
+    mock.assert_async().await;
+}
+
+#[tokio::test]
+async fn test_get_glossary_term() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/glossary/rct/")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_glossary_term_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let term = client.get_glossary_term("rct").await.unwrap();
+
+    assert_eq!(term.slug, "rct");
+    assert_eq!(term.term, "Randomized Controlled Trial");
+    assert_eq!(term.abbreviation, "RCT");
+    assert_eq!(term.category, "research-methods");
+    mock.assert_async().await;
+}
+
+// -- Guide endpoints ----------------------------------------------------------
+
+fn mock_guide_json() -> String {
+    r#"{
+        "slug": "biotin-for-hair",
+        "title": "Biotin for Hair Growth: What the Research Says",
+        "content": "Biotin is a B-vitamin commonly used for hair health.",
+        "category": "supplement-guides",
+        "meta_description": "A comprehensive guide to biotin supplementation for hair health."
+    }"#
+    .to_string()
+}
+
+fn mock_paginated_guides_json() -> String {
+    format!(
+        r#"{{
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [{}]
+        }}"#,
+        mock_guide_json()
+    )
+}
+
+#[tokio::test]
+async fn test_list_guides() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/guides/?q=biotin")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_paginated_guides_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let result = client.list_guides(Some("biotin")).await.unwrap();
+
+    assert_eq!(result.count, 1);
+    assert_eq!(result.results[0].slug, "biotin-for-hair");
+    assert_eq!(result.results[0].category, "supplement-guides");
+    mock.assert_async().await;
+}
+
+#[tokio::test]
+async fn test_get_guide() {
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/guides/biotin-for-hair/")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_guide_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let guide = client.get_guide("biotin-for-hair").await.unwrap();
+
+    assert_eq!(guide.slug, "biotin-for-hair");
+    assert_eq!(guide.title, "Biotin for Hair Growth: What the Research Says");
+    assert!(!guide.content.is_empty());
+    assert_eq!(guide.category, "supplement-guides");
+    mock.assert_async().await;
+}
+
+// -- Condition backward compatibility (nested in EvidenceLink) ----------------
+
+#[tokio::test]
+async fn test_condition_minimal_in_evidence() {
+    // Verify that the expanded Condition struct still deserializes
+    // when nested inside EvidenceLink with only slug + name fields.
+    let mut server = mockito::Server::new_async().await;
+    let mock = server
+        .mock("GET", "/api/evidence/42/")
+        .with_status(200)
+        .with_header("content-type", "application/json")
+        .with_body(mock_evidence_json())
+        .create_async()
+        .await;
+
+    let client = client_for(&server);
+    let evidence = client.get_evidence(42).await.unwrap();
+
+    // Nested condition has only slug + name; other fields should default
+    assert_eq!(evidence.condition.slug, "hair-loss");
+    assert_eq!(evidence.condition.name, "Hair Loss");
+    assert!(evidence.condition.description.is_empty());
+    assert!(evidence.condition.symptoms.is_empty());
+    assert!(!evidence.condition.is_featured);
+    mock.assert_async().await;
+}
